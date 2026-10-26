@@ -1,0 +1,30 @@
+{
+  "name": "maple-budget",
+  "version": "1.0.0",
+  "description": "PWA pessoal para orçamento de intercâmbio em Toronto",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "node scripts/prepare.mjs && vite build && node scripts/sw.mjs",
+    "test": "node --test tests/finance.test.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "predev": "node scripts/prepare.mjs",
+    "format": "prettier --write src scripts tests index.html README.md"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0",
+    "lucide-react": "1.61.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tesseract.js": "7.0.0",
+    "vite": "8.3.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "prettier": "3.9.10"
+  },
+  "private": true
+}

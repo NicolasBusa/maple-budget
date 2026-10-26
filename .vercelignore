@@ -1,0 +1,7 @@
+node_modules
+.git
+tests
+test-results
+playwright-report
+public/ocr
+*.log
