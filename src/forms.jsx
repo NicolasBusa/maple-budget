@@ -805,6 +805,8 @@ export function Calculator({
               moneyInput(amount);
               if (
                 base <= 0 ||
+                !Number.isFinite(Number(tip)) ||
+                !Number.isFinite(Number(fee)) ||
                 Number(tip) < 0 ||
                 Number(tip) > 100 ||
                 Number(fee) < 0 ||

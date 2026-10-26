@@ -71,3 +71,12 @@ Em Authentication → URL Configuration, configure Site URL e Redirect URLs com 
 ## Instalar no iPhone
 
 Abra a URL de produção no Safari → Compartilhar → Adicionar à Tela de Início. Crie sua conta e revise os limites. Use Ajustes para exportar um backup adicional periodicamente.
+
+## Publicação desta instância
+
+- App: https://maple-budget-eight.vercel.app
+- Código privado: https://github.com/NicolasBusa/maple-budget
+- Vercel: Busa's Team, plano Hobby. Deploy pelo terminal autenticado.
+- A conexão automática Vercel–GitHub não foi habilitada: a integração da Vercel não tem acesso ao repositório privado. Novos pushes, por si só, não publicam.
+- Os endereços de confirmação e recuperação no Supabase foram configurados pelo proprietário. Para se cadastrar usando o provedor de e-mail padrão, use o e-mail que pertence à equipe do projeto Supabase.
+- O teste de exportação validou o conteúdo JSON gerado e sua reimportação; a gravação de download no disco foi cancelada pelo navegador no ambiente automatizado.

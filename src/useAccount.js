@@ -78,11 +78,13 @@ export function useAccount(id, demo) {
           return;
         }
         let fresh;
+        let reachedCloud = true;
         try {
           fresh = await remote();
         } catch (e) {
           if (!local) throw e;
           fresh = local;
+          reachedCloud = false;
         }
         if (!alive) return;
         if (local?.pending) {
@@ -101,7 +103,7 @@ export function useAccount(id, demo) {
           setData(fresh.data);
           cache(fresh);
           setStatus(
-            navigator.onLine ? "Salvo na nuvem" : "Offline • neste aparelho",
+            reachedCloud ? "Salvo na nuvem" : "Offline • neste aparelho",
           );
         }
       } catch (e) {
@@ -110,7 +112,26 @@ export function useAccount(id, demo) {
       }
     }
     load();
-    const online = () => void flush();
+    const online = async () => {
+      if (demo) return;
+      if (ref.current?.pending) {
+        void flush();
+        return;
+      }
+      const previous = ref.current;
+      try {
+        const fresh = await remote();
+        if (alive && ref.current === previous) {
+          ref.current = fresh;
+          cache(fresh);
+          setData(fresh.data);
+          setStatus("Salvo na nuvem");
+          setError("");
+        }
+      } catch {
+        if (alive) setStatus("Offline • neste aparelho");
+      }
+    };
     addEventListener("online", online);
     return () => {
       alive = false;

@@ -44,7 +44,10 @@ try {
   await page.getByText("Gasto salvo.", { exact: true }).waitFor();
   await page.waitForFunction(() =>
     Object.entries(localStorage).some(
-      ([k, v]) => k.includes("a870b26a") && JSON.parse(v).pending === false,
+      ([k, v]) =>
+        k.startsWith("maple-v1-") &&
+        k !== "maple-v1-demo" &&
+        JSON.parse(v).pending === false,
     ),
   );
   await page.reload();
@@ -62,7 +65,11 @@ try {
     await page.evaluate(
       () =>
         JSON.parse(
-          localStorage.getItem("maple-v1-a870b26a-1841-4b85-a94e-296879998101"),
+          localStorage.getItem(
+            Object.keys(localStorage).find(
+              (k) => k.startsWith("maple-v1-") && k !== "maple-v1-demo",
+            ),
+          ),
         ).pending,
     ),
     true,
@@ -71,7 +78,11 @@ try {
   await page.waitForFunction(
     () =>
       JSON.parse(
-        localStorage.getItem("maple-v1-a870b26a-1841-4b85-a94e-296879998101"),
+        localStorage.getItem(
+          Object.keys(localStorage).find(
+            (k) => k.startsWith("maple-v1-") && k !== "maple-v1-demo",
+          ),
+        ),
       ).pending === false,
   );
   console.log("PASS offline queue synced");

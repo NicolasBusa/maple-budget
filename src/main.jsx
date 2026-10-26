@@ -629,8 +629,13 @@ function Dashboard({ user, demo, onExit }) {
                 <Button
                   kind="secondary"
                   onClick={() => {
-                    const q = (v) =>
-                      '"' + String(v).replaceAll('"', '""') + '"';
+                    const q = (v) => {
+                      const raw = String(v);
+                      const safe = /^[=+@\-\t\r]/.test(raw)
+                        ? String.fromCharCode(39) + raw
+                        : raw;
+                      return '"' + safe.replaceAll('"', '""') + '"';
+                    };
                     const rows = [
                       ["Data", "Descrição", "Categoria", "Valor CAD"],
                       ...expenses.map((e) => [

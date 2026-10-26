@@ -1,13 +1,24 @@
 import { createClient } from "@supabase/supabase-js";
 import { SUPABASE_URL, SUPABASE_KEY } from "./config";
-export const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+import { date, addMonths } from "./finance.mjs";
+export const db = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  global: {
+    fetch: (input, init = {}) =>
+      fetch(input, {
+        ...init,
+        signal: init.signal || AbortSignal.timeout(15000),
+      }),
+  },
+});
 export function download(name, content, type = "application/json") {
   const url = URL.createObjectURL(new Blob([content], { type }));
   const a = document.createElement("a");
   a.href = url;
   a.download = name;
+  document.body.appendChild(a);
   a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 export function validate(s) {
   if (
@@ -53,6 +64,35 @@ export function validate(s) {
       typeof e.description !== "string"
     )
       throw Error("Gasto inválido.");
+  });
+  date(s.trip.start);
+  const end = addMonths(s.trip.start, 3);
+  if (
+    typeof s.trip.city !== "string" ||
+    !s.trip.city.trim() ||
+    s.trip.city.length > 60
+  )
+    throw Error("Cidade inválida.");
+  const expenseIds = new Set(s.expenses.map((e) => e.id));
+  if (expenseIds.size !== s.expenses.length)
+    throw Error("Gastos duplicados no backup.");
+  s.expenses.forEach((e) => {
+    date(e.date);
+    if (e.date < s.trip.start || e.date >= end || e.description.length > 100)
+      throw Error("Gasto fora da viagem ou descrição inválida.");
+  });
+  s.recurring.forEach((r) => {
+    date(r.start);
+    if (
+      !r.id ||
+      !ids.has(r.categoryId) ||
+      !Number.isSafeInteger(r.amount) ||
+      r.amount <= 0 ||
+      typeof r.description !== "string" ||
+      r.start < s.trip.start ||
+      r.start >= addMonths(s.trip.start, 1)
+    )
+      throw Error("Recorrência inválida.");
   });
   return s;
 }
